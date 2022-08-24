@@ -1,10 +1,13 @@
-import {FlowRoute} from './features'
+import { AppProvider } from './providers';
+import { AppRoutes } from './routes';
 
 function App() {
   return (
-    <div style={{width: '100vw', height: '90vh', overflow: 'auto'}}>
-            <FlowRoute />
-    </div>
+    <>
+    <AppProvider>
+      <AppRoutes />
+    </AppProvider>
+    </>
   );
 }
 
