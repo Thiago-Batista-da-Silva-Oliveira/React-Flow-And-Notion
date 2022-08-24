@@ -1,4 +1,4 @@
-import { IconButton  } from '@mui/material';
+import { IconButton, Box  } from '@mui/material';
 import { useCallback, useState } from 'react';
 import ReactFlow, 
 { 
@@ -53,7 +53,8 @@ export function Flow() {
     [setEdges]
   );
   return (
-    <>
+ <>
+    <Box sx={{width: '100vw', height: '90vh', overflow: 'auto'}}>
     <ReactFlow
       nodes={nodes}
       onLoad={onLoad}
@@ -75,6 +76,7 @@ export function Flow() {
       <AddCircle color="primary" sx={{fontSize: '50px'}}/>
     </IconButton>
     <Modal open={isOpen} size="sm" onClose={close} dialogContent={<CreateFlow setNodes={setNodes} close={close} />} />
+    </Box>
     </>
   );
 }
