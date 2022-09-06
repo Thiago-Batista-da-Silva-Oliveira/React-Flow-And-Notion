@@ -8,6 +8,7 @@ import {
 import {ICreateFlow} from '../types'
 import {Form, InputField} from '../../../components'
 import { useNavigate } from 'react-router-dom';
+import { useCreateFlowDomain } from '../api/createFlowDomain';
 
 const schema = z.object({
   name: z.string().nonempty('Campo obrigatório'),
@@ -15,19 +16,14 @@ const schema = z.object({
 
 
 export function CreateFlowDomain({setValues, close}: any) {
-  const navigate = useNavigate();
+  const {mutateAsync} = useCreateFlowDomain()
   return (
     <Paper sx={{ maxWidth: '1000px', margin: 'auto' }}>
       <Box>
         <Form<ICreateFlow, typeof schema>
           id="create-flow-domain"
           onSubmit={values => {
-            const id = Math.floor(Math.random() * 98487487);
-            setValues((prev: any) => [...prev, {
-                name: values.name,
-                id
-              }])
-             navigate(`./${id}`)
+            mutateAsync(values)
             close()
           }}
           schema={schema}

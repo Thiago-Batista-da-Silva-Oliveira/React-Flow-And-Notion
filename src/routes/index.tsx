@@ -1,11 +1,13 @@
 import { useRoutes } from 'react-router-dom';
+import { useAuth } from '../providers/AuthProvider';
 
 import { protectedRoutes } from './protect'
+import { publicRoutes } from './public';
 
 export const AppRoutes = (): JSX.Element => {
-  const isAuthenticated = true
+  const { isAuthenticated } = useAuth();
 
-  const routes = protectedRoutes
+  const routes = isAuthenticated ? protectedRoutes : publicRoutes;
 
   const element = useRoutes([...routes]);
 
