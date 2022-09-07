@@ -41,7 +41,7 @@ async function authRequestInterceptor(config) {
 }
 
 export const axios = Axios.create({
-  baseURL: 'http://localhost:3333/',
+  baseURL: 'https://thiago-notion.herokuapp.com/',
 });
 
 axios.interceptors.request.use(authRequestInterceptor, error => {
