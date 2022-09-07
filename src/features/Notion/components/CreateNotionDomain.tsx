@@ -9,13 +9,15 @@ import {Form, InputField, PickColor} from '../../../components'
 import { useNavigate } from 'react-router-dom';
 import {ICreateDomain} from '../types'
 import {useState} from 'react'
+import { useCreateNotionDomain } from '../api/createDomain';
 
 const schema = z.object({
   name: z.string().nonempty('Campo obrigatório'),
 });
 
 
-export function CreateNotionDomain({setValues, close}: any) {
+export function CreateNotionDomain({ close}: any) {
+  const {mutateAsync, isLoading} = useCreateNotionDomain()
   const [color, setColor] = useState('black')
   const [background, setBackground] = useState('white')
   const navigate = useNavigate();
@@ -25,14 +27,11 @@ export function CreateNotionDomain({setValues, close}: any) {
         <Form<ICreateDomain, typeof schema>
           id="create-flow-domain"
           onSubmit={values => {
-            const id = Math.floor(Math.random() * 98487487);
-            setValues((prev: any) => [...prev, {
-                name: values.name,
-                color,
-                background,
-                id
-              }])
-             navigate(`./${id}`)
+            mutateAsync({
+              name: values.name,
+              color,
+              backgroundColor: background,
+            })
             close()
           }}
           schema={schema}
@@ -72,8 +71,9 @@ export function CreateNotionDomain({setValues, close}: any) {
                     variant="contained"
                     color="success"
                     type="submit"
+                    disabled={isLoading}
                   >
-                   Adicionar
+                   {isLoading ? 'Carregando' : 'Adicionar'}
                   </Button>
             </>
           )}

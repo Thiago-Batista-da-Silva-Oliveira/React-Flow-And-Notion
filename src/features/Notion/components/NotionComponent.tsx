@@ -3,8 +3,10 @@ import { Box, TextareaAutosize, Typography, Paper, Tooltip, IconButton, Button, 
 import {CreateNotion} from './CreateNotion'
 import {Modal} from '../../../components/Modal'
 import {useDisclosure} from '../../../hooks'
-import {useNotion} from '../../.././providers/NotionProvider'
 import {useParams} from 'react-router-dom'
+import { useNotions } from "../api/listNotions"
+import { useNotionDomains } from "../api/listDomains"
+import { Loading } from "../../../components/Loading"
 
 
 export const NotionComponent = () => {
@@ -12,10 +14,16 @@ export const NotionComponent = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dataParams = useParams()
   const id = dataParams.id;
+  const {data: domains} = useNotionDomains()
   const {isOpen, toggle, close} = useDisclosure()
-  const {values, setValues, domains} = useNotion()
-  const domain  = domains.find((domain) => domain.id == id)
-  const filteredValues = values.filter((value) => value.masterId == id)
+  const domain  = domains?.find((domain) => domain.id == id)
+  const {data, isLoading} = useNotions(id)
+
+  console.log(domain)
+
+  if(isLoading) {
+    return <Loading isLoading={isLoading} />
+  }
    return (
     <> 
         <Button
@@ -37,7 +45,7 @@ export const NotionComponent = () => {
          overFlowX: 'hidden',
     }}>
         {
-        filteredValues?.map((data) => (
+        data?.map((data) => (
             <Paper key={data.title} sx={{width: '350px',
               height: '300px',
               overflowY: 'auto',
@@ -45,7 +53,7 @@ export const NotionComponent = () => {
               flexDirection: 'column',
               justifyContent: 'space-between',
               padding: '10px',
-              background: domain?.background,
+              background: domain?.backgroundColor,
               color: domain?.color,
               marginLeft: isMobile ? '0' : '15px',
               marginTop: '10px'
@@ -85,7 +93,7 @@ export const NotionComponent = () => {
      open={isOpen}
      size="xs"
      onClose={close}
-     dialogContent={<CreateNotion masterId={id} setValues={setValues} close={close} />} />
+     dialogContent={<CreateNotion domainId={id}  close={close} />} />
        </Box>
        </>
    )

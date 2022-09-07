@@ -9,6 +9,8 @@ export async function loginWithEmailAndPassword({
 }: any): Promise<any> {
   const response = await axios.post('users/session', { email, password });
 
+  console.log(response.data.payload)
+
   return response.data.payload;
 }
 
@@ -16,7 +18,6 @@ export async function loginFn(data: any, addNotification: any) {
   const response = await loginWithEmailAndPassword(data);
 
   const { user } = response;
-
   if (response.user) {
     if (data.rememberMe === true) {
       useUserStore.setState({ user });

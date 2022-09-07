@@ -1,31 +1,29 @@
 import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router-dom';
 import { axios } from '../../../lib/axios';
 import { queryClient } from '../../../lib/react-query';
 import { useNotificationStore } from '../../../stores/notifications';
 
 
-export async function createFlowDomain(data: any): Promise<any> {
-  return axios.post('flows/createFlowDomain', data);
+export async function createNode(data: any): Promise<any> {
+  return axios.post('flows/createFlow', data);
 }
 
-export const useCreateFlowDomain = () => {
-  const navigate = useNavigate();
+export const useCreateNode = () => {
   const { addNotification } = useNotificationStore();
 
   return useMutation({
     onMutate: async newUser => {
-      await queryClient.cancelQueries('flowsDomains');
+      await queryClient.cancelQueries('nodes');
 
-      const previousUsers = queryClient.getQueryData<any[]>('flowsDomains');
+      const previousUsers = queryClient.getQueryData<any[]>('nodes');
 
-      queryClient.setQueryData('flowsDomains', [...(previousUsers || []), newUser]);
+      queryClient.setQueryData('nodes', [...(previousUsers || []), newUser]);
 
       return previousUsers;
     },
     onError: (error: any, _, context) => {
       if (context) {
-        queryClient.setQueryData('flowsDomains', context);
+        queryClient.setQueryData('nodes', context);
         addNotification({
           type: 'error',
           title: 'Erro',
@@ -34,14 +32,13 @@ export const useCreateFlowDomain = () => {
       }
     },
     onSuccess: data => {
-      queryClient.invalidateQueries('flowsDomains');
+      queryClient.invalidateQueries('nodes');
       addNotification({
         type: 'success',
         title: 'Sucesso',
         message: 'Salvo com sucesso.',
       });
-      navigate(`/flow/${data?.data.payload.id}`);
     },
-    mutationFn: createFlowDomain,
+    mutationFn: createNode,
   });
 };

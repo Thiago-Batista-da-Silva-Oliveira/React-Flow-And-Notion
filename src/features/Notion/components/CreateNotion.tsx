@@ -8,29 +8,30 @@ import {ICreateNotion} from '../types'
 import {Form, InputField} from '../../../components'
 import { format } from 'date-fns'
 import { Controller } from 'react-hook-form';
+import { useCreateNotion } from '../api/createNotion';
 const schema = z.object({
   title: z.string().nonempty('Campo obrigatório'),
   text: z.string().nonempty('Campo obrigatório'),
 });
 
 type IRequest = {
-    setValues: any;
     close: () => void;
-    masterId: string | undefined
+    domainId: string | undefined
 }
 
 
-export function CreateNotion({setValues, close, masterId}: IRequest) {
-  return (
+export function CreateNotion({ close, domainId}: IRequest) {
+  const {mutateAsync, isLoading} = useCreateNotion()
+    return (
         <Form<ICreateNotion, typeof schema>
           id="create-notion"
           onSubmit={values => {
-            setValues((prev: any) => [...prev, {
+            mutateAsync({
               title: values.title,
               text: values.text,
               date: format(new Date(), 'dd/MM/yyyy'),
-              masterId
-            }])
+              domainId
+            })
             close()
           }}
           schema={schema}
@@ -76,7 +77,7 @@ export function CreateNotion({setValues, close, masterId}: IRequest) {
                     color="success"
                     type="submit"
                   >
-                   Adicionar
+                     {isLoading ? 'Carregando' : 'Adicionar'}
                   </Button>
            </Paper>
             </>

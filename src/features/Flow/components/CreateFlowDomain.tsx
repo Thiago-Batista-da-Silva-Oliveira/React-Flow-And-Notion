@@ -15,7 +15,7 @@ const schema = z.object({
 });
 
 
-export function CreateFlowDomain({setValues, close}: any) {
+export function CreateFlowDomain({close}: any) {
   const {mutateAsync} = useCreateFlowDomain()
   return (
     <Paper sx={{ maxWidth: '1000px', margin: 'auto' }}>

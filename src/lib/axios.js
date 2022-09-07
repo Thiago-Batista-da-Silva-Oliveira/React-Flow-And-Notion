@@ -34,10 +34,8 @@ function getToken() {
 async function authRequestInterceptor(config) {
   const sessionToken = getToken();
   const data = { ...config.data };
-
   config.data = data;
   config.headers.authorization = `Bearer ${sessionToken?.token}`;
-  console.log(sessionToken.token)
   config.headers.Accept = 'application/json';
   return config;
 }

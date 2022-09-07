@@ -3,13 +3,11 @@ import {
     createContext,
     useContext,
     ReactNode,
-    useState,
   } from 'react';
   import { useMutation } from 'react-query';
 import { loginFn } from '../features/Auth/api/login';
 import { logoutFn } from '../features/Auth/api/logout';
 import { getUser } from '../features/Auth/utils/getUser';
-import { axios } from '../lib/axios';
 import { useNotificationStore } from '../stores/notifications';
 
   interface AuthProviderProps {
@@ -31,9 +29,7 @@ import { useNotificationStore } from '../stores/notifications';
   const AuthContext = createContext({} as AuthContextData);
   
   function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-    const [restriction, setRestriction] = useState('');
     const { addNotification } = useNotificationStore();
-    // const navigate = useNavigate();
     const user = getUser();
     const isAuthenticated = !!Object.keys(user).length;
   
